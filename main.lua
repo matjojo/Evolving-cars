@@ -4,6 +4,7 @@ io.stdout:setvbuf("no")
 require("track") -- reads the track file and creates the collision tables
 require("cars")
 settings = require("settings")
+require("util") -- some utilty functions
 
 function love.load(arg)
 	-- This canvas containts the current track as a background image.

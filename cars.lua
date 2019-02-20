@@ -22,6 +22,9 @@ baseCar = {
         this.location.y = this.location.y + this.velocity.y
     end,
     ["decideDirection"] = function (this)
-        this.velocity.y = 5
+        this.velocity.y = -5
     end,
+    ["draw"] = function (this)
+
+    end
 }
