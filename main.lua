@@ -14,7 +14,7 @@ function love.load(arg)
     parseTrack()
 	love.window.setTitle("Running track: " .. trackFileName)
 	
-	cars = nil
+	cars = {}
 	generateCars()
 
 end

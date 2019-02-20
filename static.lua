@@ -8,3 +8,11 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y1 < y2+h2 and
          y2 < y1+h1
 end
+
+-- To make a deepcopy of a table
+function DeepCopyTable(input)	-- thanks to https://gist.github.com/tylerneylon for providing this function
+  if type(input) ~= "table" then return input end
+  local copy = setmetatable({}, getmetatable(input))
+  for i, d in pairs(input) do copy[DeepCopyTable(i)] = DeepCopyTable(d) end
+  return copy
+end
