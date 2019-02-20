@@ -21,6 +21,10 @@ function love.load(arg)
 end
 
 function love.update(dt)
+	for i, d in pairs(cars) do
+		d:decideDirection()
+		d:move(dt) -- no collision detection yet
+	end
 
 end -- love.update
 
@@ -28,9 +32,12 @@ function love.draw(dt)
 	love.graphics.setCanvas()
 	love.graphics.setColor(1,1,1,1)
 	love.graphics.draw(backgroundCanvas)
-	-- this draws the trackimage to the background
+	-- ^^^^ this draws the trackimage to the background
 
-	love.graphics.line(0, 0, 700, 700)
+	for i, d in pairs(cars) do
+		d:draw()
+	end
+	
 end
 
 function love.keypressed(k)

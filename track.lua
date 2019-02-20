@@ -1,5 +1,5 @@
 function parseTrack()
-    trackFileName = settings.filename or "default"
+    trackFileName = settings.trackFilename or "default"
     local trackFileExtension = settings.extension or ".png"
     local trackPath = (settings.subfolder or "/track/") .. trackFileName .. trackFileExtension
     local trackImage = love.graphics.newImage(trackPath)
