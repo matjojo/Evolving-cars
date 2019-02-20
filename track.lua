@@ -17,6 +17,8 @@ function parseTrack()
     love.graphics.draw(trackImage, 0, 0)
     love.graphics.setCanvas()
 
+    local collisionColour = settings.trackWallColour or {["r"] = 1, ["g"] = 1, ["b"] = 1, ["a"] = 1}
+    local cc = collisionColour
     for width = 0, imageData:getWidth()-1, 1 do
         collisionTable[width] = {}
         for height = 0, imageData:getHeight()-1, 1 do
@@ -24,7 +26,7 @@ function parseTrack()
             -- if the pixel is anything but white we assume we can ride on it
             -- this allows us to style the tracks should we want to later
             -- print(r, g, b, a)
-            if r == 1 and g == 1 and b == 1 and a == 1 then
+            if r == cc.r and g == cc.g and b == cc.b and a == cc.a then
                 collisionTable[width][height] = true
             else
                 collisionTable[width][height] = false
@@ -39,9 +41,9 @@ function parseTrack()
     -- for i, d in ipairs(collisionTable) do
     --     for i2, d2 in ipairs(d) do
     --         if d2 then
-    --             r, g, b, a = 1, 1, 1, 1
+    --             r, g, b, a = cc.r, cc.g, cc.b, cc.a -- the colliding parts of the track are still printed in the given colour
     --         else
-    --             r, g, b, a = 0, 0, 0, 1
+    --             r, g, b, a = 0, 0, 0, 1 // per default we draw all but the walls in black
     --         end
     --         testImageData:setPixel(i, i2, r, g, b, a)
     --             -- print("collisionTable[" .. i .. "][" .. i2 .. "] = " .. tostring(d2) .. " " .. r .. " " .. g .. " " .. b .. " " .. a)
