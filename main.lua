@@ -1,10 +1,22 @@
 io.stdout:setvbuf("no")
 -- require('main_loop')
-require("run") -- this makes sure that we can skip framedrawing and such
-
+-- require("run") -- this makes sure that we can skip framedrawing and such
+require("track") -- reads the track file and creates the collision tables
+require("cars")
+settings = require("settings")
 
 function love.load(arg)
-	love.keyboard.setTextInput(true)				-- NEED TO UNDERSTAND this AND HOWTO USE IT
+	-- This canvas containts the current track as a background image.
+	-- Drawing this before anything else means that we only have to draw this image to memory once
+	backgroundCanvas = nil
+	collisionTable = {}
+    love.keyboard.setTextInput(true)
+    parseTrack()
+	love.window.setTitle("Running track: " .. trackFileName)
+	
+	cars = nil
+	generateCars()
+
 end
 
 function love.update(dt)
@@ -12,7 +24,12 @@ function love.update(dt)
 end -- love.update
 
 function love.draw(dt)
-	if inMainMenu then drawMainMenu() end
+	love.graphics.setCanvas()
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.draw(backgroundCanvas)
+	-- this draws the trackimage to the background
+
+	love.graphics.line(0, 0, 700, 700)
 end
 
 function love.keypressed(k)
