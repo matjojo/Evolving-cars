@@ -33,11 +33,17 @@ baseCar = {
         this.location.y = this.location.y - (veloy * dt)
     end,
     ["decideDirection"] = function (this) -- test option before the genetic learning is implemented
-        this.velocity.forward = 25
-        this.velocity.rotational = -10
+        this.velocity.forward = 100
+        this.velocity.rotational = 0
     end,
     ["draw"] = function (this)
-        love.graphics.setColor(this.colour.r, this.colour.g, this.colour.b, this.colour.a)
+        local colour 
+        if this.dead then
+            colour = settings.carColourDead or {["r"] = 1, ["g"] = 0, ["b"] = 0, ["a"] = 1}
+        else
+            colour = this.colour
+        end
+        love.graphics.setColor(colour.r, colour.g, colour.b, colour.a)
         local vertices = this:getVertices() -- tl-tr-br-bl
         love.graphics.polygon("fill", vertices)
         -- love.graphics.setColor(1,0,0,1) -- show where the top left is (RED)
@@ -49,12 +55,13 @@ baseCar = {
         -- love.graphics.setColor(1,1,1,1) -- show where the bottom left is (WHITE)
         -- love.graphics.circle("fill", vertices[7], vertices[8], 5)
     end,
-    ["collisionLogic"] = function (this)
-        -- make list of pixel locations that this car is in
-        -- we will probably jsut check on the corners, as dt should be small and thus no real problems should occur,
-        -- maybe we can widen the track limits to three pixels to alliviate this problem
-        -- check for collisions
-        -- make the car red, it has collided
+    ["checkDeath"] = function (this)
+        for _, d in pairs(this:cornersFromVertices(this:getVertices())) do
+            -- so basically for every corner: {x and y}
+            if collisionTable[math.floor(d.x)][math.floor(d.y)] then
+                this.dead = true
+            end
+        end
     end,
     ["getVertices"] = function (this)
         local sinOfRotation = math.sin(math.rad(this.location.rotation))
@@ -79,5 +86,21 @@ baseCar = {
                     ["x"] = bl.x + (cosOfRotation * this.size.length)
                 }
         return {tl.x, tl.y, tr.x, tr.y, br.x, br.y, bl.x, bl.y}
+    end,
+    ["update"] = function (this, dt)
+        if not this.dead then
+            this:checkDeath()
+            this:decideDirection()
+            this:move(dt)
+        end
+    end,
+    ["cornersFromVertices"] = function (this, vertices)
+        -- these are the vertices as gotten from this:getVertices()
+        local corners = {}
+        corners[1] = {["x"] = vertices[1], ["y"] = vertices[2]}
+        corners[2] = {["x"] = vertices[3], ["y"] = vertices[4]}
+        corners[3] = {["x"] = vertices[5], ["y"] = vertices[6]}
+        corners[4] = {["x"] = vertices[7], ["y"] = vertices[8]}
+        return corners
     end,
 }

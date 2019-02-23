@@ -10,7 +10,7 @@ function love.load(arg)
 	-- This canvas containts the current track as a background image.
 	-- Drawing this before anything else means that we only have to draw this image to memory once
 	backgroundCanvas = nil
-	collisionTable = {}
+	collisionTable = {} -- [x][y]
     love.keyboard.setTextInput(true)
     parseTrack()
 	love.window.setTitle("Running track: " .. trackFileName)
@@ -21,9 +21,8 @@ function love.load(arg)
 end
 
 function love.update(dt)
-	for i, d in pairs(cars) do
-		d:decideDirection()
-		d:move(dt) -- no collision detection yet
+	for _, d in pairs(cars) do
+		d:update(dt)
 	end
 
 end -- love.update
