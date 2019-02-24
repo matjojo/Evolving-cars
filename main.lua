@@ -6,6 +6,17 @@ require("cars")
 settings = require("settings")
 require("util") -- some utilty functions
 
+
+
+--[[
+TODO:
+Add the driver logic, for a Lua implementation of this take a look at MarIOCart from sethbling
+
+we need to set the DT to some default value if we ever want to do a high speed background simulation
+--]]
+
+
+
 function love.load(arg)
 	-- This canvas containts the current track as a background image.
 	-- Drawing this before anything else means that we only have to draw this image to memory once
@@ -17,6 +28,12 @@ function love.load(arg)
 	
 	cars = {}
 	generateCars()
+
+	debug = {
+	["showCheckPoints"] = false,
+	["showCarCorner"] = false,
+	["showMouseCoordsWhenPressed"] = false,
+	}
 
 end
 
@@ -33,10 +50,15 @@ function love.draw(dt)
 	love.graphics.draw(backgroundCanvas)
 	-- ^^^^ this draws the trackimage to the background
 
-	for i, d in pairs(cars) do
+	for _, d in pairs(cars) do
 		d:draw()
 	end
-	
+	if debug.showCheckPoints then
+		love.graphics.setColor(1,0,0,1)
+		for _, d in ipairs(settings.trackInfo.default.checkpoints) do
+			love.graphics.polygon("line", verticesFromSquareAsTwoPoints(d))
+		end
+	end
 end
 
 function love.keypressed(k)
@@ -46,12 +68,8 @@ function love.keypressed(k)
 	print(k)
 end
 
-
-
-function love.focus(f)
-	if not f then
-		Focus = false
-	else
-		Focus = true
+function love.mousepressed( x, y, button, istouch, presses)
+	if debug.showMouseCoordsWhenPressed then
+		print(x, y)
 	end
 end
