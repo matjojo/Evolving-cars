@@ -42,11 +42,10 @@ baseCar = {
         this.location.x = this.location.x + (velox * dt)
         this.location.y = this.location.y - (veloy * dt)
     end,
-    ["decideDirection"] = function (this) -- test option before the genetic learning is implemented
+    ["decideDirection"] = function (this, dt) -- test option before the genetic learning is implemented
         local w, a, s, d = false, false, false, false -- default is off
 
         -- w, a, s, d = this:getNet():getInputsFromNet()
-
         if w then
             this.velocity.forward = this.velocity.forward + (this.specifications.accelleration * dt)
             if this.velocity.forward > this.specifications.maxSpeed then
@@ -66,7 +65,7 @@ baseCar = {
             end
         end
         if d then
-            this.velocity.rotational = this.velocity.rotational - (this.velocity.specifications.steeringAccelleration * dt)
+            this.velocity.rotational = this.velocity.rotational - (this.specifications.steeringAccelleration * dt)
             if -this.velocity.rotational > this.specifications.maxSteeringAngle then
                 this.velocity.rotational = -this.specifications.maxSteeringAngle
             end
