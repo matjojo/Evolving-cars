@@ -15,10 +15,18 @@ baseCar = {
     -- Making sure that none of the bots will go over a single checkpoint again and again
     ["dead"] = false,
     ["ID"] = -1,
+    ["specifications"] = {
+        maxSpeed = 120, -- this should probably never rise above say 5 times UPS, since the collisionlogic relies on the car not moving too much
+        accelleration = 50, -- it should take some time to speed up
+        decelleration = 70,
+        maxSpeedRevers = 30, -- really there should be no reason to drive backwards but hey what can ya do?
+        maxSteeringAngle = 33, -- this is some sort of assume/reasonable real amount
+        driverLookingRadius = 150, -- number based on the size of the track at wide corners, not really an exact science
+    },
     ["new"] = function (this, newID)
         newCar = DeepCopyTable(baseCar)
         newCar.ID = newID
-        newCar.location = settings.trackInfo[(settings.trackFileName or "default")]["carStartLocation"] or this.location
+        newCar.location = settings.trackInfo[(settings.trackFileName or "default")].carStartLocation or this.location
         -- settings.trackInfo[trackname].carStartLocation gives you the location of the cars at the start
         newCar.size = (settings.size or this.size)
         newCar.colour = (settings.carColour or this.colour)
