@@ -19,8 +19,9 @@ baseCar = {
         maxSpeed = 120, -- this should probably never rise above say 5 times UPS, since the collisionlogic relies on the car not moving too much
         accelleration = 50, -- it should take some time to speed up
         decelleration = 70,
-        maxSpeedRevers = 30, -- really there should be no reason to drive backwards but hey what can ya do?
+        maxSpeedReverse = -30, -- really there should be no reason to drive backwards but hey what can ya do?
         maxSteeringAngle = 33, -- this is some sort of assume/reasonable real amount
+        steeringAccelleration = 50, -- the steering should be able to lock within a second
         driverLookingRadius = 150, -- number based on the size of the track at wide corners, not really an exact science
     },
     ["new"] = function (this, newID)
@@ -42,8 +43,34 @@ baseCar = {
         this.location.y = this.location.y - (veloy * dt)
     end,
     ["decideDirection"] = function (this) -- test option before the genetic learning is implemented
-        this.velocity.forward = 10
-        this.velocity.rotational = 0
+        local w, a, s, d = false, false, false, false -- default is off
+
+        -- w, a, s, d = this:getNet():getInputsFromNet()
+
+        if w then
+            this.velocity.forward = this.velocity.forward + (this.specifications.accelleration * dt)
+            if this.velocity.forward > this.specifications.maxSpeed then
+                this.velocity.forward = this.specifications.maxSpeed
+            end
+        end
+        if s then
+            this.velocity.forward = this.velocity.forward - (this.specifications.decelleration * dt)
+            if this.velocity.forward < this.specifications.maxSpeedReverse then
+                this.velocity.forward = this.specifications.maxSpeedReverse
+            end
+        end
+        if a then
+            this.velocity.rotational = this.velocity.rotational + (this.specifications.steeringAccelleration * dt)
+            if this.velocity.rotational > this.specifications.maxSteeringAngle then
+                this.velocity.rotational = this.specifications.maxSteeringAngle
+            end
+        end
+        if d then
+            this.velocity.rotational = this.velocity.rotational - (this.velocity.specifications.steeringAccelleration * dt)
+            if -this.velocity.rotational > this.specifications.maxSteeringAngle then
+                this.velocity.rotational = -this.specifications.maxSteeringAngle
+            end
+        end
     end,
     ["draw"] = function (this)
         local colour 
@@ -101,7 +128,7 @@ baseCar = {
     ["update"] = function (this, dt)
         if not this.dead then
             this:checkDeath()
-            this:decideDirection()
+            this:decideDirection(dt)
             this:move(dt)
             this:checkCheckpoint(dt)
         end
