@@ -1,7 +1,6 @@
 function generateCars()
     for i = 1, (settings.maxCars or 100), 1 do
-        cars[i] = DeepCopyTable(baseCar)
-        cars[i]:init(i)
+        cars[i] = baseCar:new(i)
     end
 end
 
@@ -16,12 +15,14 @@ baseCar = {
     -- Making sure that none of the bots will go over a single checkpoint again and again
     ["dead"] = false,
     ["ID"] = -1,
-    ["init"] = function (this, newID)
-        this.ID = newID
-        this.location = settings.trackInfo[(settings.trackFileName or "default")]["carStartLocation"] or this.location
+    ["new"] = function (this, newID)
+        newCar = DeepCopyTable(baseCar)
+        newCar.ID = newID
+        newCar.location = settings.trackInfo[(settings.trackFileName or "default")]["carStartLocation"] or this.location
         -- settings.trackInfo[trackname].carStartLocation gives you the location of the cars at the start
-        this.size = (settings.size or this.size)
-        this.colour = (settings.carColour or this.colour)
+        newCar.size = (settings.size or this.size)
+        newCar.colour = (settings.carColour or this.colour)
+        return newCar
     end,
     ["move"] = function (this, dt)
         this.location.rotation = this.location.rotation + this.velocity.rotational * dt
