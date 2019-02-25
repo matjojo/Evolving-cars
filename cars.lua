@@ -113,10 +113,10 @@ baseCar = {
         while checkNum > #checkpoints do
             checkNum = checkNum - #checkpoints
         end
+
+        local nextCheckpoint = checkpoints[checkNum + 1]
         
-        local Checkpoint = checkpoints[checkNum + 1]
-        
-        local cp = Checkpoint
+        local cp = nextCheckpoint
         if pointIsInRectangle(this.location.x, this.location.y, cp.tl.x, cp.tl.y, cp.br.x, cp.br.y) then
             this.maxCheckPoint = this.maxCheckPoint + 1
         end
