@@ -108,7 +108,14 @@ baseCar = {
         return corners
     end,
     ["checkCheckpoint"] = function (this, dt)
-        local Checkpoint = settings.trackInfo[settings.trackFilename or "default"].checkpoints[this.maxCheckPoint + 1]
+        local checkpoints = settings.trackInfo[settings.trackFilename or "default"].checkpoints
+        local checkNum = this.maxCheckPoint
+        while checkNum > #checkpoints do
+            checkNum = checkNum - #checkpoints
+        end
+        
+        local Checkpoint = checkpoints[checkNum + 1]
+        
         local cp = Checkpoint
         if pointIsInRectangle(this.location.x, this.location.y, cp.tl.x, cp.tl.y, cp.br.x, cp.br.y) then
             this.maxCheckPoint = this.maxCheckPoint + 1
