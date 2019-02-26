@@ -24,7 +24,7 @@ function love.load(arg)
 	collisionTable = {} -- [x][y]
     love.keyboard.setTextInput(true)
     parseTrack()
-	love.window.setTitle("Running track: " .. trackFileName)
+	love.window.setTitle("Running track: " .. (settings.trackFileName or "default"))
 	
 	cars = {}
 	generateCars()

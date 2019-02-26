@@ -9,7 +9,10 @@ return {
     ["carColourDead"] = {["r"] = 1, ["g"] = 0, ["b"] = 0, ["a"] = 1},
     ["trackInfo"] = {
         ["default"] = {
-            ["carStartLocation"] = {["x"] = 550, ["y"] = 252, rotation = 180},
+        ["driverLookingRadius"] = 100,  -- number based on the size of the track at wide corners, not really an exact science
+                                        -- theoretically it would be best to have this be just a bit larger then the widest piece of track / 2
+                                        -- so that the driver can see the whole track, but less might be more fun
+        ["carStartLocation"] = {["x"] = 550, ["y"] = 252, rotation = 180},
             ["checkpoints"] = {
         -- {xy}, {xy} for the top left and bottom right of a square that the 'front right' of a car has to move through
         -- the checkpoints NEED to be in order from start to finish in this table, if not the scoring system will not work
