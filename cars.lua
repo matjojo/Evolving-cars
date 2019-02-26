@@ -22,7 +22,6 @@ baseCar = {
         maxSpeedReverse = -30, -- really there should be no reason to drive backwards but hey what can ya do?
         maxSteeringAngle = 33, -- this is some sort of assume/reasonable real amount
         steeringAccelleration = 50, -- the steering should be able to lock within a second
-        driverLookingRadius = 150, -- number based on the size of the track at wide corners, not really an exact science
     },
     ["new"] = function (this, newID)
         newCar = DeepCopyTable(baseCar)
@@ -47,28 +46,20 @@ baseCar = {
 
         -- w, a, s, d = this:getNet():getInputsFromNet()
         if w then
-            this.velocity.forward = this.velocity.forward + (this.specifications.accelleration * dt)
-            if this.velocity.forward > this.specifications.maxSpeed then
-                this.velocity.forward = this.specifications.maxSpeed
-            end
+            this.velocity.forward = math.min(   this.velocity.forward + (this.specifications.accelleration * dt),
+                                                this.specifications.maxSpeed)
         end
         if s then
-            this.velocity.forward = this.velocity.forward - (this.specifications.decelleration * dt)
-            if this.velocity.forward < this.specifications.maxSpeedReverse then
-                this.velocity.forward = this.specifications.maxSpeedReverse
-            end
+            this.velocity.forward = math.max(   this.velocity.forward - (this.specifications.decelleration * dt),
+                                                this.specifications.maxSpeedReverse)
         end
         if a then
-            this.velocity.rotational = this.velocity.rotational + (this.specifications.steeringAccelleration * dt)
-            if this.velocity.rotational > this.specifications.maxSteeringAngle then
-                this.velocity.rotational = this.specifications.maxSteeringAngle
-            end
+            this.velocity.rotational = math.min(this.velocity.rotational + (this.specifications.steeringAccelleration * dt),
+                                                this.specifications.maxSteeringAngle)
         end
         if d then
-            this.velocity.rotational = this.velocity.rotational - (this.specifications.steeringAccelleration * dt)
-            if -this.velocity.rotational > this.specifications.maxSteeringAngle then
-                this.velocity.rotational = -this.specifications.maxSteeringAngle
-            end
+            this.velocity.rotational = math.max( this.velocity.rotational - (this.specifications.steeringAccelleration * dt),
+                                                -this.specifications.maxSteeringAngle)
         end
     end,
     ["draw"] = function (this)
